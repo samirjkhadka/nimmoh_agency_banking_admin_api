@@ -1,18 +1,26 @@
-const pool = require("../config/dbConfig");
+const {pool} = require("../config/dbConfig");
 
-const getAdminByUsername = async (username) => {
+const getAdminByUsername = async (email) => {
   const result = await pool.query(
-    "SELECT * FROM admin_users WHERE username = $1  And status = 'active'",
-    [username]
+    "SELECT * FROM admin_users WHERE email = $1  And is_active = 'true'",
+    [email]
+  );
+  return result.rows[0];
+};
+const getAdminById = async (admin_id) => {
+  const result = await pool.query(
+    "SELECT * FROM admin_users WHERE id = $1  And is_active = 'true'",
+    [admin_id]
   );
   return result.rows[0];
 };
 
-const updateAdminLoginInfo = async (adminId, lastLogin, token) => {
+const updateAdminLoginInfo = async (adminId,  token) => {
+  console.log(adminId,token);
   await pool.query(
-    `UPDATE admin_users SET last_login = $1, session_token = $2 WHERE id = $3`,
-    [lastLogin, token, adminId]
+    `UPDATE admin_users SET  two_fa_secret = $1 WHERE id = $2`,
+    [ token, adminId]
   );
 };
 
-module.exports = { getAdminByUsername, updateAdminLoginInfo };
+module.exports = { getAdminByUsername,getAdminById, updateAdminLoginInfo };

@@ -6,10 +6,11 @@ const generate2FASecret = (email) => {
   });
 };
 
-const verifyOTP = (otp, secret) => {
+const verifyOTP = (otp, base32Secret) => {
+
   return speakeasy.totp.verify({
-    secret: secret.base32,
-    encoding: "base32",
+    secret: base32Secret,
+
     token: otp,
     window: 1,
   });

@@ -18,6 +18,8 @@ app.use(cookieParser());
 
 app.use(express.urlencoded({ extended: true }));
 
+const authRoutes = require("./routes/adminauth.routes");
+
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -34,6 +36,7 @@ app.get("/", (req, res) => {
   });
 });
 
+app.use("/api/v1/auth", authRoutes);
 
 app.use((err, req, res, next) => {
   res.status(500).json({
